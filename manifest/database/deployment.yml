@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-db
+  labels:
+    app: test-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-db
+  template:
+    metadata:
+      labels:
+        app: test-db
+    spec:
+        containers:
+          - name: test-db
+            image: postgres:18-alpine
+            ports:
+              - containerPort: 5432
+            env:
+              - name: PGDATA
+                value: /var/lib/postgresql/data/pgdata
+            envFrom:
+                - secretRef:
+                    name: db-secret
+            volumeMounts:
+                - name: db-storage
+                  mountPath: /var/lib/postgresql/data
+            resources:
+              requests:
+                cpu: 250m
+                memory: 256Mi
+              limits:
+                cpu: "1"
+                memory: 512Mi
+        volumes:
+          - name: db-storage
+            persistentVolumeClaim:
+              claimName: test-db-pvc
