@@ -55,7 +55,7 @@ pipeline {
                         sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' deployment.yml
                         git config user.email "jenkins@ci.com"
                         git config user.name "Jenkins"
-                        git add deployment.yaml
+                        git add deployment.yml
                         git commit -m "ci: update image tag to ${DOCKER_TAG}"
                         git push
                     """
