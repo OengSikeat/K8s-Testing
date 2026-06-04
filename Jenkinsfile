@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "gotoh6951/my-app"
+        DOCKER_IMAGE = "oengsikat/my-app"
         DOCKER_TAG = "${BUILD_NUMBER}"
-        MANIFEST_REPO = "https://github.com/OengSikeat/ArgoCD-Manifest"
+        MANIFEST_REPO = "https://github.com/OengSikeat/ArgoCD-Manifest.git"
         MANIFEST_DIR = "manifest/spring"
     }
 
@@ -16,15 +16,16 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Build') {
             steps {
-                sh './gradlew test'
+                sh 'chmod +x gradlew'
+                sh './gradlew clean build -x test --no-daemon'
             }
         }
 
-        stage('Build') {
+        stage('Test') {
             steps {
-                sh './gradlew clean build -x test'
+                sh './gradlew test --no-daemon'
             }
         }
 
@@ -54,11 +55,10 @@ pipeline {
                     passwordVariable: 'GIT_PASS'
                 )]) {
                     sh """
-                        git clone https://${GIT_USER}:${GIT_PASS}@github.com/your-org/ArgoCD-Manifest.git
+                        rm -rf ArgoCD-Manifest
+                        git clone https://${GIT_USER}:${GIT_PASS}@github.com/OengSikeat/ArgoCD-Manifest.git
                         cd ArgoCD-Manifest/${MANIFEST_DIR}
-
                         sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' deployment.yaml
-
                         git config user.email "jenkins@ci.com"
                         git config user.name "Jenkins"
                         git add deployment.yaml
@@ -72,10 +72,10 @@ pipeline {
 
     post {
         success {
-            echo "Build ${DOCKER_TAG} deployed successfully"
+            echo "Build ${DOCKER_TAG} completed successfully"
         }
         failure {
-            echo "Pipeline failed - check logs"
+            echo "Pipeline failed - check console output"
         }
     }
 }
