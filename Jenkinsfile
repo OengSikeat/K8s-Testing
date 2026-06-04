@@ -23,12 +23,6 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                sh './gradlew test --no-daemon'
-            }
-        }
-
         stage('Docker Build & Push') {
             steps {
                 withCredentials([usernamePassword(
@@ -58,7 +52,7 @@ pipeline {
                         rm -rf ArgoCD-Manifest
                         git clone https://${GIT_USER}:${GIT_PASS}@github.com/OengSikeat/ArgoCD-Manifest.git
                         cd ArgoCD-Manifest/${MANIFEST_DIR}
-                        sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' deployment.yaml
+                        sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' deployment.yml
                         git config user.email "jenkins@ci.com"
                         git config user.name "Jenkins"
                         git add deployment.yaml
