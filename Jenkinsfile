@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "oengsikat/my-app"
+        DOCKER_IMAGE = "gotoh6951/my-app"
         DOCKER_TAG = "${BUILD_NUMBER}"
         MANIFEST_REPO = "https://github.com/OengSikeat/ArgoCD-Manifest.git"
         MANIFEST_DIR = "manifest/spring"
