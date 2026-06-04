@@ -17,9 +17,9 @@ import java.util.List;
 public class TestController {
     private final UserRepository userRepository;
 
-    @GetMapping("/test")
+    @GetMapping("/test4")
     public String test() {
-        return "test3";
+        return "test4";
     }
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
