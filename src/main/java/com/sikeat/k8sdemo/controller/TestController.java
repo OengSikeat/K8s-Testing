@@ -19,7 +19,7 @@ public class TestController {
 
     @GetMapping("/test")
     public String test() {
-        return "test2";
+        return "test3";
     }
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
