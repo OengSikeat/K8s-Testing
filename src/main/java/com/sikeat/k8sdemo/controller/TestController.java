@@ -1,6 +1,7 @@
 package com.sikeat.k8sdemo.controller;
 
 
+import com.sikeat.k8sdemo.client.MailService;
 import com.sikeat.k8sdemo.dto.UserRequest;
 import com.sikeat.k8sdemo.dto.UserResponse;
 import com.sikeat.k8sdemo.entity.User;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/v1/test")
 public class TestController {
     private final UserRepository userRepository;
+    private final MailService mailService;
 
     @GetMapping("/test4")
     public String test() {
@@ -39,5 +41,9 @@ public class TestController {
     public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
         UserResponse resp = userRepository.findById(id).orElseThrow().toResponse();
         return ResponseEntity.ok(resp);
+    }
+    @GetMapping("/mail")
+    public String getEmail() {
+        return mailService.getEmail();
     }
 }
