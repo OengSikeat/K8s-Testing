@@ -23,6 +23,10 @@ public class TestController {
     public String test() {
         return "test6";
     }
+    @GetMapping("/canary")
+    public String canary() {
+        return "canary is working";
+    }
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
         User user = User.builder()
