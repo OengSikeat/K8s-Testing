@@ -21,7 +21,7 @@ public class TestController {
 
     @GetMapping("/test4")
     public String test() {
-        return "test6";
+        return "test canary";
     }
     @GetMapping("/canary")
     public String canary() {
