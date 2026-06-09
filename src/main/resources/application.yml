@@ -2,7 +2,7 @@ spring:
   application:
     name: k8s-demo
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_db
+    url: jdbc:postgresql://test-db:5432/user_db  # ← use service name
     username: postgres
     password: Keat6951
   jpa:
