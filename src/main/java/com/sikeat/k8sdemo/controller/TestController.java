@@ -23,7 +23,7 @@ public class TestController {
     public String test() {
         return "test canary";
     }
-    @GetMapping("/canary")
+    @GetMapping("/canary/v2")
     public String canary() {
         return "canary is working 2 3 4";
     }
