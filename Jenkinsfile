@@ -52,10 +52,10 @@ pipeline {
                         rm -rf ArgoCD-Manifest
                         git clone https://${GIT_USER}:${GIT_PASS}@github.com/OengSikeat/ArgoCD-Manifest.git
                         cd ArgoCD-Manifest/${MANIFEST_DIR}
-                        sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' deployment.yml
+                        sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' deployment-canary.yml
                         git config user.email "jenkins@ci.com"
                         git config user.name "Jenkins"
-                        git add deployment.yml
+                        git add deployment-canary.yml
                         git commit -m "ci: update image tag to ${DOCKER_TAG}"
                         git push
                     """

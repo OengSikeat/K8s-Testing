@@ -25,7 +25,7 @@ public class TestController {
     }
     @GetMapping("/canary")
     public String canary() {
-        return "canary is working 2 3";
+        return "canary is working 2 3 4";
     }
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
