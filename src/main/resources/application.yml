@@ -2,7 +2,7 @@ spring:
   application:
     name: k8s-demo
   datasource:
-    url: jdbc:postgresql://test-db:5432/user_db  # ← use service name
+    url: jdbc:postgresql://test-db:5432/testdb  # ← use service name
     username: postgres
     password: Keat6951
   jpa:
@@ -13,8 +13,14 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
 springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
   swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
     servers:
       - url: https://www.sikeat.me
         description: Production
