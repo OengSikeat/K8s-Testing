@@ -21,7 +21,7 @@ public class TestController {
 
     @GetMapping("/test4")
     public String test() {
-        return "test5";
+        return "test6";
     }
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
