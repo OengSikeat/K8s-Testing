@@ -10,7 +10,6 @@ pipeline {
         }
 
         stage('Build') {
-            when { branch 'dev' }
             steps {
                 sh 'chmod +x gradlew'
                 sh './gradlew clean build -x test --no-daemon'
@@ -18,7 +17,6 @@ pipeline {
         }
 
         stage('Approve') {
-            when { branch 'dev' }
             options { timeout(time: 1, unit: 'HOURS') }
             steps {
                 script {
@@ -51,7 +49,7 @@ pipeline {
             echo "Build failed or was rejected — check console output."
         }
         aborted {
-            echo "Approval was cancelledd or timed out."
+            echo "Approval was cancelled or timed out."
         }
     }
 }
