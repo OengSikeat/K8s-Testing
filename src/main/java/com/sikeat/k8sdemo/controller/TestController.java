@@ -14,7 +14,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/test")
+@RequestMapping("/api/v1/tesst")
 public class TestController {
     private final UserRepository userRepository;
     private final MailService mailService;
