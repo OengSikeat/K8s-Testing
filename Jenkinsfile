@@ -10,6 +10,7 @@ pipeline {
         }
 
         stage('Build') {
+            when { branch 'dev' }
             steps {
                 sh 'chmod +x gradlew'
                 sh './gradlew clean build -x test --no-daemon'
@@ -35,7 +36,7 @@ pipeline {
                         currentBuild.result = 'FAILURE'
                         error("Build rejected by approver.")
                     }
-                    echo "Approved — build #${env.BUILD_NUMBER}. (Deploy not wired up yet.)"
+                    echo "Approved — build #${env.BUILD_NUMBER}."
                 }
             }
         }
