@@ -1,13 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = "gotoh6951/my-app"
-        DOCKER_TAG = "${BUILD_NUMBER}"
-        MANIFEST_REPO = "https://github.com/OengSikeat/ArgoCD-Manifest.git"
-        MANIFEST_DIR = "manifest/spring"
-    }
-
     stages {
 
         stage('Checkout') {
@@ -23,53 +16,41 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push') {
+        stage('Approve') {
+            when { branch 'dev' }
+            options { timeout(time: 1, unit: 'HOURS') }
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-credentials',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh """
-                        docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
-                        docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest
-                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        docker push ${DOCKER_IMAGE}:latest
-                    """
+                script {
+                    def decision = input(
+                        message: "Build #${env.BUILD_NUMBER} passed. Approve?",
+                        ok: "Submit",
+                        submitter: "alice,bob",
+                        parameters: [
+                            choice(name: 'DECISION',
+                                   choices: ['Approve', 'Reject'],
+                                   description: 'Approve or reject this build')
+                        ]
+                    )
+                    if (decision != 'Approve') {
+                        currentBuild.result = 'FAILURE'
+                        error("Build rejected by approver.")
+                    }
+                    echo "Approved — build #${env.BUILD_NUMBER}. (Deploy not wired up yet.)"
                 }
             }
         }
 
-        stage('Update Manifest') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'github-credentials',
-                    usernameVariable: 'GIT_USER',
-                    passwordVariable: 'GIT_PASS'
-                )]) {
-                    sh """
-                        rm -rf ArgoCD-Manifest
-                        git clone https://${GIT_USER}:${GIT_PASS}@github.com/OengSikeat/ArgoCD-Manifest.git
-                        cd ArgoCD-Manifest/${MANIFEST_DIR}
-                        sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' deployment-canary.yml
-                        git config user.email "jenkins@ci.com"
-                        git config user.name "Jenkins"
-                        git add deployment-canary.yml
-                        git commit -m "ci: update image tag to ${DOCKER_TAG}"
-                        git push
-                    """
-                }
-            }
-        }
     }
 
     post {
         success {
-            echo "Build ${DOCKER_TAG} completed successfully"
+            echo "Build #${env.BUILD_NUMBER} built and approved."
         }
         failure {
-            echo "Pipeline failed - check console output"
+            echo "Build failed or was rejected — check console output."
+        }
+        aborted {
+            echo "Approval was cancelled or timed out."
         }
     }
 }
