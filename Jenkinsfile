@@ -51,7 +51,7 @@ pipeline {
             echo "Build failed or was rejected — check console output."
         }
         aborted {
-            echo "Approval was cancelled or timed out."
+            echo "Approval was cancelledd or timed out."
         }
     }
 }
